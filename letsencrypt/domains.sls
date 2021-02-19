@@ -35,7 +35,9 @@
     - require:
       - file: {{ check_cert_cmd }}
 
-{% for setname, domainlist in letsencrypt.domainsets.items() %}
+{% if 'domainsets' in letsencrypt and letsencrypt.domainsets.items() %}
+
+  {% for setname, domainlist in letsencrypt.domainsets.items() %}
 
 # domainlist[0] represents the "CommonName", and the rest
 # represent SubjectAlternativeNames
@@ -81,4 +83,12 @@ create-fullchain-privkey-pem-for-{{ setname }}:
     - require:
       - cmd: create-initial-cert-{{ setname }}-{{ domainlist | join('+') }}
 
-{% endfor %}
+  {% endfor %}
+
+{% else %}
+
+letsencrypt-no-domainsets:
+  test.fail_without_changes:
+    - comment: 'No domainsets defined for letsencrypt'
+
+{% endif %}

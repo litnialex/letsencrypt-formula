@@ -18,7 +18,11 @@
             merge=salt['grains.filter_by'](
                 osfingermap,
                 grain='osfinger',
-                merge = salt['pillar.get']('letsencrypt', {}),
+                merge=salt['pillar.get'](
+                    'letsencrypt',
+                    salt['grains.get']('letsencrypt', {}),
+                    merge=True,
+                ),
             ),
         ),
     ),
