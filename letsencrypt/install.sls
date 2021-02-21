@@ -19,6 +19,16 @@ letsencrypt_external_repo:
       - pkg: letsencrypt-client
 {%- endif %}
 
+{%- if letsencrypt.use_package and
+       grains.os|d('') == 'CentOS' %}
+letsencrypt-epel-release:
+  pkg.installed:
+    - pkgs:
+        - epel-release
+    - require_in:
+      - pkg: letsencrypt-client
+{%- endif %}
+
 letsencrypt-client:
   {%- if letsencrypt.use_package %}
   pkg.installed:
