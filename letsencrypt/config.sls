@@ -20,3 +20,9 @@ letsencrypt-config:
     - makedirs: true
     - context:
         config: {{ letsencrypt.config | json }}
+
+{% if 'webroot-path' in letsencrypt.config %}
+letsencrypt-webroot-path:
+  file.directory:
+    - name: {{ letsencrypt.config['webroot-path'] }}
+{% endif %}
